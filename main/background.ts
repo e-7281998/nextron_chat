@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, ipcMain } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
 
@@ -30,3 +30,9 @@ if (isProd) {
 app.on('window-all-closed', () => {
   app.quit();
 });
+
+//클라이언트로 부터 수신
+ipcMain.on('sendMessage', (evt, arg) => {
+  console.log(arg); //수신내용
+  evt.sender.send('replyMessage', arg);
+})
