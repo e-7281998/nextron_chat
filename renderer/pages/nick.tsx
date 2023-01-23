@@ -18,6 +18,7 @@ function Nick() {
         e.preventDefault();
         await setDoc(doc(db, "user", user['uid']), {
             nick: nick,
+            state: 'wating',
         });
         router.replace({ pathname: '/chatList' });
     }
