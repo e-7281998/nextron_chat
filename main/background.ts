@@ -4,6 +4,37 @@ import { createWindow } from './helpers';
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
 
+import { Server } from "socket.io";
+
+const io = new Server(3000, {
+  cors: {
+    origin: "*",
+  }
+});
+
+const socketList = []
+const nickList = []
+
+io.on("connection", (socket) => {
+  console.log('클라이언트와 연결됨')
+  socketList.push(socket);
+
+  socket.on("makeNick", (nick) => {
+    nickList.push(nick);
+    console.log(nickList, '닉네임저장완료')
+  })
+
+  socket.on('userList', arg => {
+    console.log(arg, '요청옴');
+    socketList.map((sk) => {
+      sk.emit("userList", nickList);
+    })
+  })
+
+});
+
+
+
 if (isProd) {
   serve({ directory: 'app' });
 } else {
@@ -38,31 +69,9 @@ if (isProd) {
     await subWin.loadURL(`http://localhost:${port}/home`);
   }
 
+
 })();
 
 app.on('window-all-closed', () => {
   app.quit();
 });
-
-//채널 목록
-const chn = [];
-
-//새로운 유저 접속
-ipcMain.on('login', (evt, arg) => {
-  console.log('새로운 접속:', arg);
-
-  chn.push(evt);
-
-  //등록된 모든 채널에 새로운 유저 왔음을 알림(=> 클라이언트 유저 목록 업뎃)
-  chn.map((value) => {
-    value.sender.send('login', '새로운 유저 접속!');
-  })
-});
-
-// //클라이언트로 부터 수신
-// ipcMain.on('loginUser', (evt, arg) => {
-//   onLogUser(arg);
-//   console.log(evt);
-//   // console.log(logOnUser); //수신내용
-//   evt.sender.send('loginUser', logOnUser);
-// })

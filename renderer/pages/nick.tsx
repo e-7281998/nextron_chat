@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
-import { setDoc, doc } from 'firebase/firestore';
-import { db } from '../../f_base';
-import { user } from './home';
 import { useRouter } from 'next/router';
+import { socket } from './socket';
 
+socket.emit('connection', '클라이언트가 접속함');
 
 function Nick() {
     const [nick, setNick] = useState('');
@@ -14,12 +13,9 @@ function Nick() {
         setNick(e.target.value);
     };
 
-    const saveNick = async (e) => {
+    const saveNick = (e) => {
         e.preventDefault();
-        await setDoc(doc(db, "user", user['uid']), {
-            nick: nick,
-            state: 'wating',
-        });
+        socket.emit("makeNick", nick);
         router.replace({ pathname: '/chatList' });
     }
 

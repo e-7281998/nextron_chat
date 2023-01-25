@@ -40,7 +40,7 @@ function Home() {
           break;
         case '로그인':
           userCredential = await signInWithEmailAndPassword(auth, email, password)
-          routePage = '/chatList';
+          routePage = '/nick';
           break;
         default:
           break;
