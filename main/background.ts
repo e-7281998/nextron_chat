@@ -12,10 +12,32 @@ const io = new Server(3000, {
   }
 });
 
+function publicRooms() {
+  const {
+    sockets: {
+      adapter: { sids, rooms },
+    },
+  } = io;
+
+  const publicRooms = [];
+  rooms.forEach((_, key) => {
+    if (sids.get(key) === undefined) {
+      publicRooms.push(key);
+    }
+  });
+
+  return publicRooms;
+}
+
 const socketList = []
 const nickList = []
 
 io.on("connection", (socket) => {
+
+  socket.onAny((e) => {
+    console.log(`socket event ${e}`);
+  })
+
   console.log('클라이언트와 연결됨')
   socketList.push(socket);
   socket["nickName"] = 'anoun';
@@ -38,13 +60,10 @@ io.on("connection", (socket) => {
     })
   })
 
-  //사용중인 유저 목록 전송
+  //생성된 채팅방 목록 전송
   socket.on('chatList', arg => {
-    console.log(socket.rooms)
-    // console.log(arg, '요청옴');
-    // socketList.map((sk) => {
-    //   sk.emit("chatList", socket["nickName"]);
-    // })
+    console.log(`${arg} 요청옴`)
+    sendRoomList();
   })
 
   //채팅 방 만듬
@@ -52,6 +71,7 @@ io.on("connection", (socket) => {
     console.log('채팅방 만들기 요청옴')
     socket.join(roomName);
     socket.to(roomName).emit("welcome", `${socket["nickName"]}님이 입장했습니다!`);
+    sendRoomList();
   })
 
   //메시지 받고, 모두에게 보냄
@@ -61,6 +81,9 @@ io.on("connection", (socket) => {
 
 });
 
+function sendRoomList() {
+  io.sockets.emit("chatList", publicRooms());
+}
 
 
 if (isProd) {

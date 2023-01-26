@@ -11,11 +11,13 @@ function List() {
   const [loginUser, setLoginUser] = React.useState(['']);
   const [roomName, setRoomName] = useState('');
   const [listValue, setListValue] = useState('1');
+  const [roomList, setRoomList] = useState(['생성된 채팅방이 없습니다.']);
 
   function changeRoomNname(e) {
     setRoomName(e.target.value)
   }
 
+  //채팅방 만들기
   function makeChatRoom(e) {
     e.preventDefault();
     const roomType = e.target.value;
@@ -25,19 +27,25 @@ function List() {
     router.replace({ pathname: '/room' });
   }
 
+  //목록 보이기
   function showList(e) {
     e.preventDefault();
-    const val = e.target.vlaue;
+    const val = e.target.value;
+    console.log(val)
     setListValue(val);
   }
 
   socket.on('userList', (arg) => {
     setLoginUser(arg);
   })
+  socket.on('chatList', (arg) => {
+    setRoomList(arg);
+  })
 
   useEffect(() => {
     //로그인 유저 요청
     socket.emit('userList', '로그인유저 보내줘');
+    socket.emit("chatList", '생성된 채팅 방 보여줘')
   }, [])
 
   return (
@@ -59,25 +67,19 @@ function List() {
         <button onClick={showList} value="2">채팅 방</button>
       </div>
       <hr />
-      <ul>
+      {listValue == '1' ? <ul>
         {loginUser.map((nick, n) => {
           return <li key={n}>{nick}</li>
         })}
       </ul>
+        : <ul>
+          {roomList.map((rm, n) => {
+            return <li key={n}>{rm}</li>
+          })}
+        </ul>}
 
     </React.Fragment >
   );
 };
 
 export default List;
-
-// {listValue === '1' ? <ul>
-//         {loginUser.map((nick, n) => {
-//           return <li key={n}>{nick}</li>
-//         })}
-//       </ul>
-//         : <ul>
-//           {loginUser.map((nick, n) => {
-//             return <li key={n}>{nick}</li>
-//           })}
-//         </ul>}
