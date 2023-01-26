@@ -18,17 +18,45 @@ const nickList = []
 io.on("connection", (socket) => {
   console.log('클라이언트와 연결됨')
   socketList.push(socket);
+  socket["nickName"] = 'anoun';
+  console.log(socket['nickName']);
 
+
+  //닉네임 받아서 등록
   socket.on("makeNick", (nick) => {
     nickList.push(nick);
-    console.log(nickList, '닉네임저장완료')
+    socket["nickName"] = nick;
+    console.log(socket['nickName']);
+    console.log(nick, '닉네임저장완료');
   })
 
+  //사용중인 유저 목록 전송
   socket.on('userList', arg => {
     console.log(arg, '요청옴');
     socketList.map((sk) => {
       sk.emit("userList", nickList);
     })
+  })
+
+  //사용중인 유저 목록 전송
+  socket.on('chatList', arg => {
+    console.log(socket.rooms)
+    // console.log(arg, '요청옴');
+    // socketList.map((sk) => {
+    //   sk.emit("chatList", socket["nickName"]);
+    // })
+  })
+
+  //채팅 방 만듬
+  socket.on("makeChatRoom", (roomName, roomType) => {
+    console.log('채팅방 만들기 요청옴')
+    socket.join(roomName);
+    socket.to(roomName).emit("welcome", `${socket["nickName"]}님이 입장했습니다!`);
+  })
+
+  //메시지 받고, 모두에게 보냄
+  socket.on("sendMag", (roomName, msg) => {
+    socket.to(roomName).emit("newMsg", socket["nickName"], msg);
   })
 
 });
