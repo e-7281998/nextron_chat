@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { socket } from './socket';
 import { room } from './chatList';
+import { useRouter } from 'next/router';
 
 function Room() {
     const [msg, setMsg] = useState('');
     const [chat, setChat] = useState([`${room}에 입장했습니다!`]);
+    const router = useRouter();
 
     function changeMsg(e) {
         setMsg(e.target.value);
@@ -21,8 +23,8 @@ function Room() {
     }
 
     useEffect(() => {
-        //새로운 유저 입장
-        socket.on('welcome', (arg) => {
+        //새로운 유저 입장, 떠남
+        socket.on('welcome_leave', (arg) => {
             console.log(arg);
             updateChat(arg);
         })
@@ -38,12 +40,21 @@ function Room() {
         setChat((prev) => [...prev, msg]);
     }
 
+    //채팅방 나가기
+    function leaveRoom(e) {
+        e.preventDefault();
+        socket.emit('leaveRoom', room, () => {
+            router.replace({ pathname: '/chatList' });
+        });
+    }
+
     return (
         <React.Fragment>
             <Head>
                 <title>Next - Nextron (with-typescript)</title>
             </Head>
             <p>{room}</p>
+            <button onClick={leaveRoom}>채팅방 나가기</button>
             <ul>
                 {chat.map((val, n) => {
                     return (

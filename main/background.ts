@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
   socket.on("makeChatRoom", (roomName, roomType) => {
     console.log('채팅방 만들기 요청옴')
     socket.join(roomName);
-    socket.to(roomName).emit("welcome", `${socket["nickName"]}님이 입장했습니다!`);
+    socket.to(roomName).emit("welcome_leave", `${socket["nickName"]}님이 입장했습니다!`);
     sendRoomList();
   })
 
@@ -79,12 +79,17 @@ io.on("connection", (socket) => {
     socket.to(roomName).emit("newMsg", socket["nickName"], msg);
   })
 
+  //채팅 방 나가기
+  socket.on("leaveRoom", (roomName, done) => {
+    socket.leave(roomName);
+    socket.to(roomName).emit("welcome_leave", `${socket["nickName"]}님이 채팅방을 나갔습니다.`);
+    done();
+  })
 });
 
 function sendRoomList() {
   io.sockets.emit("chatList", publicRooms());
 }
-
 
 if (isProd) {
   serve({ directory: 'app' });
