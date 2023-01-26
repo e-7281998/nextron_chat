@@ -1,10 +1,9 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import serve from 'electron-serve';
 import { createWindow } from './helpers';
+import { Server } from "socket.io";
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
-
-import { Server } from "socket.io";
 
 const io = new Server(3000, {
   cors: {
@@ -65,12 +64,26 @@ io.on("connection", (socket) => {
     sendRoomList();
   })
 
-  //채팅 방 만듬
-  socket.on("enterRoom", (roomName) => {
+  //채팅 방 만들기, 입장하기
+  socket.on("enterRoom", (roomName, roomType) => {
     console.log('채팅방 만들기 요청옴')
-    socket.join(roomName);
-    socket.to(roomName).emit("welcome_leave", `${socket["nickName"]}님이 입장했습니다!`);
-    sendRoomList();
+    //방 신설
+    if (!(roomType === '0')) {
+      enterRoomMsg(socket, roomName);
+      io.sockets.adapter.rooms.get(roomName)["type"] = roomType;
+    }
+    if (roomType === '0') {
+      if (io.sockets.adapter.rooms.get(roomName)["type"] === '1') {
+        if (io.sockets.adapter.rooms.get(roomName)?.size == 2) {
+          socket.emit("unableRoom", "[1:1 채팅방] 인원이 다 찼습니다.");
+        } else {
+          enterRoomMsg(socket, roomName);
+        }
+      } else {
+        enterRoomMsg(socket, roomName);
+      }
+    }
+
   })
 
   //메시지 받고, 모두에게 보냄
@@ -86,6 +99,13 @@ io.on("connection", (socket) => {
   })
 
 });
+
+function enterRoomMsg(socket, roomName) {
+  socket.join(roomName);
+  socket.emit("ableRoom");
+  socket.to(roomName).emit("welcome_leave", `${socket["nickName"]}님이 입장했습니다!`);
+  sendRoomList();
+}
 
 function sendRoomList() {
   io.sockets.emit("chatList", publicRooms());
@@ -126,6 +146,24 @@ if (isProd) {
     },
   })
 
+  const subWin2 = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    },
+  })
+
+  // const subWin3 = new BrowserWindow({
+  //   width: 800,
+  //   height: 600,
+  //   webPreferences: {
+  //     nodeIntegration: true,
+  //     contextIsolation: false
+  //   },
+  // })
+
   if (isProd) {
     await mainWindow.loadURL('app://./home.html');
   } else {
@@ -134,6 +172,8 @@ if (isProd) {
     mainWindow.webContents.openDevTools();
     //새로운 창 하나 더 만듬 완성 후 지울 것.
     await subWin.loadURL(`http://localhost:${port}/home`);
+    await subWin2.loadURL(`http://localhost:${port}/home`);
+    // await subWin3.loadURL(`http://localhost:${port}/home`);
   }
 
 })();
