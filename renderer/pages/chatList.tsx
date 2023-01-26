@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { socket } from './socket';
 import { useRouter } from 'next/router';
+import { UserList } from './userList';
 
 export var room = '';
 
 function List() {
   const router = useRouter();
 
-  const [loginUser, setLoginUser] = React.useState(['']);
   const [roomName, setRoomName] = useState('');
   const [listValue, setListValue] = useState('1');
   const [roomList, setRoomList] = useState(['생성된 채팅방이 없습니다.']);
@@ -49,16 +49,11 @@ function List() {
     setListValue(val);
   }
 
-  socket.on('userList', (arg) => {
-    setLoginUser(arg);
-  })
   socket.on('chatList', (arg) => {
     setRoomList(arg);
   })
 
   useEffect(() => {
-    //로그인 유저 요청
-    socket.emit('userList', '로그인유저 보내줘');
     socket.emit("chatList", '생성된 채팅 방 보여줘')
 
     socket.on("unableRoom", (msg) => {
@@ -75,30 +70,26 @@ function List() {
         <title>Next - Nextron (with-typescript)</title>
       </Head>
       <div>
-        <p>채팅방 이름</p>
-        <form>
-          <input type="text" value={roomName} onChange={changeRoomNname} />
-          <button onClick={enterRoom} value="1" >1 : 1 채팅</button>
-          <button onClick={enterRoom} value="2" >그룹 채팅</button>
-        </form>
-        <hr />
-      </div>
-      <div>
         <button onClick={showList} value="1">접속중인 유저</button>
         <button onClick={showList} value="2">채팅 방</button>
       </div>
-      <p>{errMsg}</p>
       <hr />
-      {listValue == '1' ? <ul>
-        {loginUser.map((nick, n) => {
-          return <li key={n}>{nick}</li>
-        })}
-      </ul>
-        : <ul>
-          {roomList.map((rm, n) => {
-            return <li key={n}><p>{rm}</p><button onClick={enterRoom} value="0">참여하기</button></li>
-          })}
-        </ul>}
+      {listValue == '1' ? <UserList />
+        : <>
+          <form>
+            <p>채팅방 이름</p>
+            <input type="text" value={roomName} onChange={changeRoomNname} />
+            <button onClick={enterRoom} value="1" >1 : 1 채팅</button>
+            <button onClick={enterRoom} value="2" >그룹 채팅</button>
+          </form>
+          <p>{errMsg}</p>
+          <hr />
+          <ul>
+            {roomList.map((rm, n) => {
+              return <li key={n}><p>{rm}</p><button onClick={enterRoom} value="0">참여하기</button></li>
+            })}
+          </ul>
+        </>}
 
     </React.Fragment >
   );

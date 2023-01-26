@@ -66,20 +66,21 @@ io.on("connection", (socket) => {
 
   //채팅 방 만들기, 입장하기
   socket.on("enterRoom", (roomName, roomType) => {
-    console.log('채팅방 만들기 요청옴')
-    //방 신설
+    //기존 방 입장
     if (!(roomType === '0')) {
       enterRoomMsg(socket, roomName);
       io.sockets.adapter.rooms.get(roomName)["type"] = roomType;
     }
+    //방 신설
+    console.log('채팅방 만들기 요청옴')
     if (roomType === '0') {
-      if (io.sockets.adapter.rooms.get(roomName)["type"] === '1') {
-        if (io.sockets.adapter.rooms.get(roomName)?.size == 2) {
+      if (io.sockets.adapter.rooms.get(roomName)["type"] === '1') { //1:1 채팅방
+        if (io.sockets.adapter.rooms.get(roomName)?.size == 2) {  //1:1 인원 다 찬 경우
           socket.emit("unableRoom", "[1:1 채팅방] 인원이 다 찼습니다.");
         } else {
           enterRoomMsg(socket, roomName);
         }
-      } else {
+      } else {  //그룹방 신설
         enterRoomMsg(socket, roomName);
       }
     }
