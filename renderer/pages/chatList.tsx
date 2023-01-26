@@ -17,13 +17,12 @@ function List() {
     setRoomName(e.target.value)
   }
 
-  //채팅방 만들기
-  function makeChatRoom(e) {
+  //채팅방 만들기, 입장하기
+  function enterRoom(e) {
     e.preventDefault();
     const roomType = e.target.value;
-    console.log(roomType)
-    socket.emit("makeChatRoom", roomName, roomType);
-    room = roomName;
+    roomType === '0' ? room = e.target.previousSibling.innerText : room = roomName;
+    socket.emit("enterRoom", room);
     router.replace({ pathname: '/room' });
   }
 
@@ -57,8 +56,8 @@ function List() {
         <p>채팅방 이름</p>
         <form>
           <input type="text" value={roomName} onChange={changeRoomNname} />
-          <button onClick={makeChatRoom} value="1" >1 : 1 채팅</button>
-          <button onClick={makeChatRoom} value="2" >그룹 채팅</button>
+          <button onClick={enterRoom} value="1" >1 : 1 채팅</button>
+          <button onClick={enterRoom} value="2" >그룹 채팅</button>
         </form>
         <hr />
       </div>
@@ -74,7 +73,7 @@ function List() {
       </ul>
         : <ul>
           {roomList.map((rm, n) => {
-            return <li key={n}>{rm}</li>
+            return <li key={n}><p>{rm}</p><button onClick={enterRoom} value="0">참여하기</button></li>
           })}
         </ul>}
 

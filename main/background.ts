@@ -30,23 +30,24 @@ function publicRooms() {
 }
 
 const socketList = []
-const nickList = []
 
 io.on("connection", (socket) => {
-
-  socket.onAny((e) => {
-    console.log(`socket event ${e}`);
-  })
-
   console.log('클라이언트와 연결됨')
+
   socketList.push(socket);
   socket["nickName"] = 'anoun';
   console.log(socket['nickName']);
 
+  //연결 종료, 접속 중 유저 업뎃 해줌
+  socket.on("disconnect", () => {
+    console.log('연결종료 요청 소켓', socket.id);
+    const n = socketList.indexOf(socket);
+    socketList.splice(n, 1);
+    userList();
+  })
 
   //닉네임 받아서 등록
   socket.on("makeNick", (nick) => {
-    nickList.push(nick);
     socket["nickName"] = nick;
     console.log(socket['nickName']);
     console.log(nick, '닉네임저장완료');
@@ -55,9 +56,7 @@ io.on("connection", (socket) => {
   //사용중인 유저 목록 전송
   socket.on('userList', arg => {
     console.log(arg, '요청옴');
-    socketList.map((sk) => {
-      sk.emit("userList", nickList);
-    })
+    userList();
   })
 
   //생성된 채팅방 목록 전송
@@ -67,7 +66,7 @@ io.on("connection", (socket) => {
   })
 
   //채팅 방 만듬
-  socket.on("makeChatRoom", (roomName, roomType) => {
+  socket.on("enterRoom", (roomName) => {
     console.log('채팅방 만들기 요청옴')
     socket.join(roomName);
     socket.to(roomName).emit("welcome_leave", `${socket["nickName"]}님이 입장했습니다!`);
@@ -85,10 +84,22 @@ io.on("connection", (socket) => {
     socket.to(roomName).emit("welcome_leave", `${socket["nickName"]}님이 채팅방을 나갔습니다.`);
     done();
   })
+
 });
 
 function sendRoomList() {
   io.sockets.emit("chatList", publicRooms());
+}
+
+//사용자 목록 정리
+function userList() {
+  const userList = [];
+  socketList.map((sk) => {
+    userList.push(sk["nickName"]);
+  })
+  socketList.map((sk) => {
+    sk.emit("userList", userList);
+  })
 }
 
 if (isProd) {
@@ -112,7 +123,7 @@ if (isProd) {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
-    }
+    },
   })
 
   if (isProd) {
@@ -124,7 +135,6 @@ if (isProd) {
     //새로운 창 하나 더 만듬 완성 후 지울 것.
     await subWin.loadURL(`http://localhost:${port}/home`);
   }
-
 
 })();
 
