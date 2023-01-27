@@ -6,6 +6,7 @@ import styles from '../style/Room.module.css';
 
 window.addEventListener('resize', () => {
     setChatHeight();
+    setChatScroll();
 });
 
 //채팅 창 조절
@@ -18,6 +19,12 @@ function setChatHeight() {
     const chatH = winH - divH - formH - 40;
     const ul = document.querySelector('ul');
     ul.style.height = chatH + 'px';
+};
+
+//채팅창 스크롤 하단으로
+function setChatScroll() {
+    const ul = document.getElementsByTagName('ul')[0];
+    ul.scrollTop = ul.scrollHeight;
 };
 
 //새로운 유저 입장, 떠남
@@ -38,6 +45,7 @@ function updateChat(msg: string, who: string) {
     li.appendChild(span);
     ul.appendChild(li);
     li.classList.add(who);
+    setChatScroll();
 };
 
 
