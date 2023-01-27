@@ -17,7 +17,7 @@ export function UserList() {
     return (
         <ul className={`${styles.userList}`}>
             {loginUser.map((nick, n) => {
-                return <li key={n}>{nick}</li>
+                return <li key={n}><span>{nick}</span></li>
             })}
         </ul>
     )

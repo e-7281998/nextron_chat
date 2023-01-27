@@ -77,6 +77,12 @@ li {
     color: red;
     font-weight: bold;
     text-align: center;
+    font-size: 13px;
+}
+
+.active {
+    background-color: #F48484 !important;
+    color: whitesmoke;
 }
 
 .lightBlue {

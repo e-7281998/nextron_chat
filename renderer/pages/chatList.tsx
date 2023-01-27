@@ -32,6 +32,10 @@ function List() {
         setErrMsg('채팅방 이름을 작성해 주세요.');
         return;
       }
+      if (room.length > 10) {
+        setErrMsg('10글자 이하로 작성해 주세요.');
+        return;
+      }
       if (roomList.indexOf(room) >= 0) {
         setErrMsg('이미 존재하는 방 입니다.');
         return;
@@ -44,8 +48,20 @@ function List() {
   //목록 보이기
   function showList(e) {
     e.preventDefault();
+    setErrMsg('');
     const val = e.target.value;
     setListValue(val);
+
+    const btn1 = document.getElementsByTagName('button')[0];
+    const btn2 = document.getElementsByTagName('button')[1];
+
+    if (val === '1') {
+      btn2.classList.remove('active');
+      btn1.classList.add('active');
+    } else {
+      btn1.classList.remove('active');
+      btn2.classList.add('active');
+    }
   };
 
   socket.on('chatList', (arg) => {
@@ -68,14 +84,14 @@ function List() {
   return (
     <div className={`${styles.wrap}`}>
       <div className={`${styles.listBtnContainer}`}>
-        <button onClick={showList} value="1">접속중인 유저</button>
-        <button onClick={showList} value="2">채팅 방</button>
+        <button className='active' onClick={showList} value="1">접속중인 유저</button>
+        <button onClick={showList} value="2">채팅방</button>
       </div>
       {listValue == '1' ? <UserList />
         : <div>
           <form className={`${styles.makeRoom}`}>
             <p>채팅방 이름</p>
-            <input type="text" value={roomName} onChange={changeRoomNname} placeholder="채팅 방 이름을 정하세요." />
+            <input type="text" value={roomName} onChange={changeRoomNname} placeholder="채팅방 이름을 정하세요." />
             <div>
               <button onClick={enterRoom} value="1" >1 : 1 채팅</button>
               <button onClick={enterRoom} value="2" >그룹 채팅</button>

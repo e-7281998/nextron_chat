@@ -1,6 +1,36 @@
 .userList {
     text-align: center;
     margin-top: 110px;
-    height: 300px;
     overflow-y: auto;
+}
+
+.userList li {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.userList li:last-child span {
+    position: relative;
+    display: inline-block;
+}
+
+.userList li:nth-child(2n-1) {
+    color: #FF7B54;
+}
+
+.userList li:nth-child(2n) {
+    color: #FFB26B;
+}
+
+.userList li:last-child span::before {
+    content: 'NEW!';
+    position: absolute;
+    width: 100px;
+    top: 0;
+    left: -130px;
+    color: blue;
+    background-color: #FFB26B;
+    color: white;
+    padding: 0 10px;
+    border-radius: 20px;
 }
