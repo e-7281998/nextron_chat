@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
+import { createElement, useEffect, useState } from 'react';
 import { socket } from './socket';
 import { room } from './chatList';
 import { useRouter } from 'next/router';
@@ -19,25 +18,33 @@ function Room() {
         if (msg == '') return;
         socket.emit('sendMag', room, msg);
         setMsg('');
-        updateChat(msg);
+        updateChat(msg, 'offi');
     }
 
     useEffect(() => {
         //새로운 유저 입장, 떠남
         socket.on('welcome_leave', (arg) => {
             console.log(arg);
-            updateChat(arg);
+            updateChat(arg, 'me');
+            // updateChat(arg);
         })
 
         //새 메시지 도착
         socket.on('newMsg', (nick, msg) => {
-            updateChat(`${nick} : ${msg}`);
+            updateChat(`${nick} : ${msg}`, 'user');
+            // updateChat(`${nick} : ${msg}`);
         })
     }, [])
 
     //채팅 내용 업뎃
-    function updateChat(msg: string) {
-        setChat((prev) => [...prev, msg]);
+    function updateChat(msg: string, who: string) {
+        const btnClick = document.querySelector("ul");
+        const li = document.createElement("li");
+        li.textContent = msg;
+        btnClick.appendChild(li);
+        li.classList.add(who);
+
+        // setChat((prev) => [...prev, msg]);
     }
 
     //채팅방 나가기
@@ -49,24 +56,17 @@ function Room() {
     }
 
     return (
-        <React.Fragment>
-            <Head>
-                <title>Next - Nextron (with-typescript)</title>
-            </Head>
+        <div>
             <p>{room}</p>
             <button onClick={leaveRoom}>채팅방 나가기</button>
             <ul>
-                {chat.map((val, n) => {
-                    return (
-                        <li key={n}>{val}</li>
-                    )
-                })}
+                <li className='offi'>${room}에 입장했습니다!</li>
             </ul>
             <form>
                 <input type="text" value={msg} onChange={changeMsg} />
                 <button onClick={sendMsg}>전송</button>
             </form>
-        </React.Fragment >
+        </div>
     );
 };
 
