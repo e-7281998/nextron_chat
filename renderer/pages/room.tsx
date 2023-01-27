@@ -5,9 +5,10 @@ import { useRouter } from 'next/router';
 import styles from '../style/Room.module.css';
 
 window.addEventListener('resize', () => {
-    setChatHeight()
-})
+    setChatHeight();
+});
 
+//채팅 창 조절
 function setChatHeight() {
     const winH = window.innerHeight;
     const div = document.getElementsByTagName('div')[2];
@@ -17,20 +18,16 @@ function setChatHeight() {
     const chatH = winH - divH - formH - 40;
     const ul = document.querySelector('ul');
     ul.style.height = chatH + 'px';
-}
+};
 
 //새로운 유저 입장, 떠남
 socket.on('welcome_leave', (arg) => {
-    console.log(arg);
     updateChat(arg, 'offi');
-    // updateChat(arg);
-})
+});
 
 //새 메시지 도착
 socket.on('newMsg', (nick, msg) => {
     updateChat(`${nick} : ${msg}`, 'user');
-    console.log('이게 두번인가')
-    // updateChat(`${nick} : ${msg}`);
 });
 
 function updateChat(msg: string, who: string) {
@@ -40,20 +37,17 @@ function updateChat(msg: string, who: string) {
     span.textContent = msg;
     li.appendChild(span);
     ul.appendChild(li);
-    console.log('업뎃에 문제있나')
     li.classList.add(who);
-    // setChat((prev) => [...prev, msg]);
-}
+};
 
 
 function Room() {
     const [msg, setMsg] = useState('');
-    const [chat, setChat] = useState([`${room}에 입장했습니다!`]);
     const router = useRouter();
 
     function changeMsg(e) {
         setMsg(e.target.value);
-    }
+    };
 
     //메시지 보내기
     function sendMsg(e) {
@@ -70,11 +64,11 @@ function Room() {
         socket.emit('leaveRoom', room, () => {
             router.replace({ pathname: '/chatList' });
         });
-    }
+    };
 
     useEffect(() => {
-        setChatHeight()
-    }, [])
+        setChatHeight();
+    }, []);
 
     return (
         <div className={`${styles.wrap}`}>
@@ -83,7 +77,7 @@ function Room() {
                 <button className='lightBlue' onClick={leaveRoom}>채팅방 나가기</button>
             </div>
             <ul className={`${styles.chat}`}>
-                <li className='offi'>${room}에 입장했습니다!</li>
+                <li className='offi'>{room}에 입장했습니다!</li>
             </ul>
             <form className={`${styles.send}`}>
                 <input type="text" value={msg} onChange={changeMsg} />

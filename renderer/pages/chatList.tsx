@@ -15,8 +15,8 @@ function List() {
   const [errMsg, setErrMsg] = useState('');
 
   function changeRoomNname(e) {
-    setRoomName(e.target.value)
-  }
+    setRoomName(e.target.value);
+  };
 
   //채팅방 만들기, 입장하기
   function enterRoom(e) {
@@ -39,30 +39,31 @@ function List() {
         socket.emit("enterRoom", room, roomType);
       }
     }
-  }
+  };
 
   //목록 보이기
   function showList(e) {
     e.preventDefault();
     const val = e.target.value;
-    console.log(val)
     setListValue(val);
-  }
+  };
 
   socket.on('chatList', (arg) => {
     setRoomList(arg);
-  })
+  });
 
   useEffect(() => {
-    socket.emit("chatList", '생성된 채팅 방 보여줘')
+    socket.emit("chatList");
 
     socket.on("unableRoom", (msg) => {
       setErrMsg(msg);
-    })
+    });
+
     socket.on("ableRoom", () => {
       router.replace({ pathname: '/room' });
-    })
-  }, [])
+    });
+
+  }, []);
 
   return (
     <div className={`${styles.wrap}`}>

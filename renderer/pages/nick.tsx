@@ -17,7 +17,7 @@ function Nick() {
         e.preventDefault();
         socket.emit("makeNick", nick);
         router.replace({ pathname: '/chatList' });
-    }
+    };
 
     return (
         <form className={`${styles.container}`}>

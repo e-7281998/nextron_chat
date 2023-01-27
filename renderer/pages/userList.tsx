@@ -8,11 +8,11 @@ export function UserList() {
 
     socket.on('userList', (arg) => {
         setLoginUser(arg);
-    })
+    });
 
     useEffect(() => {
-        socket.emit('userList', '로그인유저 보내줘');
-    }, [])
+        socket.emit('userList');
+    }, []);
 
     return (
         <ul className={`${styles.userList}`}>
@@ -21,4 +21,4 @@ export function UserList() {
             })}
         </ul>
     )
-}
+};

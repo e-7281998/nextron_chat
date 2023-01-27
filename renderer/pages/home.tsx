@@ -17,29 +17,29 @@ function Home() {
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
-  }
+  };
 
   const onChangePassword = (e) => {
     setPassword(e.target.value);
-  }
+  };
+
   function btnTxt() {
     setBtnNum((n) => n === 1 ? 0 : 1);
-  }
+  };
 
   const onLog = async (e) => {
     e.preventDefault();
     const btnId = e.target.innerText;
-    console.log(btnId);
     try {
       var userCredential: object;
       var routePage: string;
       switch (btnId) {
         case '회원가입':
-          userCredential = await createUserWithEmailAndPassword(auth, email, password)
+          userCredential = await createUserWithEmailAndPassword(auth, email, password);
           routePage = '/nick';
           break;
         case '로그인':
-          userCredential = await signInWithEmailAndPassword(auth, email, password)
+          userCredential = await signInWithEmailAndPassword(auth, email, password);
           routePage = '/nick';
           break;
         default:
@@ -47,17 +47,14 @@ function Home() {
       }
 
       user = userCredential['user'];
-      console.log(`${btnId} 성공`);
-      console.log(user['uid'])
       router.push({ pathname: routePage });
 
     } catch (error) {
       const errorCode = error['code'];
       const errorMessage = error['message'];
-      console.log(`${btnId} 실패 : ${errorMessage}`);
     }
 
-  }
+  };
 
   return (
     <form className={`${styles.container}`}>

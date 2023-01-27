@@ -26,16 +26,15 @@ function publicRooms() {
   });
 
   return publicRooms;
-}
+};
 
-const socketList = []
+const socketList = [];
 
 io.on("connection", (socket) => {
-  console.log('클라이언트와 연결됨')
+  console.log('클라이언트와 연결됨');
 
   socketList.push(socket);
   socket["nickName"] = 'anoun';
-  console.log(socket['nickName']);
 
   //연결 종료, 접속 중 유저 업뎃 해줌
   socket.on("disconnect", () => {
@@ -43,26 +42,22 @@ io.on("connection", (socket) => {
     const n = socketList.indexOf(socket);
     socketList.splice(n, 1);
     userList();
-  })
+  });
 
   //닉네임 받아서 등록
   socket.on("makeNick", (nick) => {
     socket["nickName"] = nick;
-    console.log(socket['nickName']);
-    console.log(nick, '닉네임저장완료');
-  })
+  });
 
   //사용중인 유저 목록 전송
-  socket.on('userList', arg => {
-    console.log(arg, '요청옴');
+  socket.on('userList', () => {
     userList();
-  })
+  });
 
   //생성된 채팅방 목록 전송
-  socket.on('chatList', arg => {
-    console.log(`${arg} 요청옴`)
+  socket.on('chatList', () => {
     sendRoomList();
-  })
+  });
 
   //채팅 방 만들기, 입장하기
   socket.on("enterRoom", (roomName, roomType) => {
@@ -72,7 +67,6 @@ io.on("connection", (socket) => {
       io.sockets.adapter.rooms.get(roomName)["type"] = roomType;
     }
     //방 신설
-    console.log('채팅방 만들기 요청옴')
     if (roomType === '0') {
       if (io.sockets.adapter.rooms.get(roomName)["type"] === '1') { //1:1 채팅방
         if (io.sockets.adapter.rooms.get(roomName)?.size == 2) {  //1:1 인원 다 찬 경우
@@ -84,7 +78,7 @@ io.on("connection", (socket) => {
         enterRoomMsg(socket, roomName);
       }
     }
-
+    ;
   })
 
   //메시지 받고, 모두에게 보냄
