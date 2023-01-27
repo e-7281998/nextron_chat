@@ -1,0 +1,6 @@
+.userList {
+    text-align: center;
+    margin-top: 110px;
+    height: 300px;
+    overflow-y: auto;
+}

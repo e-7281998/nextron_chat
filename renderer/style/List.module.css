@@ -1,0 +1,121 @@
+.wrap {
+    padding: 0 20px;
+}
+
+.listBtnContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    border-bottom: 2px solid #ccc;
+    z-index: 1;
+}
+
+.listBtnContainer button {
+    background-color: #FFD4D4;
+    margin: 10px 20px;
+}
+
+.listBtnContainer button:hover {
+    background-color: #F48484;
+    color: whitesmoke;
+}
+
+.makeRoom {
+    margin-top: 110px;
+    font-size: 18px;
+    text-align: center;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-block;
+}
+
+.makeRoom p {
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    color: darkolivegreen;
+    padding-left: 20px;
+}
+
+.makeRoom input {
+    border: none;
+    border-bottom: 2px solid lightgray;
+    background-color: transparent;
+    margin: 10px;
+    font-size: 20px;
+    padding: 5px 8px;
+}
+
+.makeRoom input:focus {
+    border-bottom: 2px solid #AACB73;
+}
+
+.makeRoom div {
+    display: inline-block;
+    margin: 5px;
+}
+
+.makeRoom div button {
+    display: block;
+    margin: 5px;
+}
+
+.roomList {
+    border-top: 2px solid #ccc;
+    display: inline-block;
+    width: 80%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0 auto;
+}
+
+.roomList li {
+    display: inline-block;
+    min-width: 40%;
+    transition: all .3s ease-in;
+    position: relative;
+    text-align: right;
+    color: lightslategray
+}
+
+.roomList li:nth-child(2n-1) {
+    margin-right: 10%;
+}
+
+@media(max-width: 940px) {
+    .roomList {
+        width: 90%;
+    }
+
+    .roomList li {
+        min-width: 90%;
+        margin-left: auto;
+    }
+}
+
+.roomList p {
+    display: inline-block;
+    margin-right: 20px;
+    position: absolute;
+    font-weight: bold;
+    padding-left: 20px;
+    left: 0;
+    top: 0;
+}
+
+/* .roomList button {
+    background-color: #79d2d2;
+    color: #4a8282;
+}
+
+.roomList button:hover {
+    background-color: #67b5b5;
+    color: whitesmoke;
+} */

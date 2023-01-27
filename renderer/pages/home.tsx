@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import Head from 'next/head';
+import { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from '../../f_base';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import styles from '../style/Home.module.css';
 
 export let user: object;
 
@@ -60,23 +60,18 @@ function Home() {
   }
 
   return (
-    <React.Fragment>
-      <Head>
-        <title>Nextron Chat</title>
-      </Head>
+    <form className={`${styles.container}`}>
+      <input type="email" placeholder='이메일을 입력하세요.' value={email} onChange={onChangeEmail} />
+      <input type="password" placeholder='비밀번호를 입력하세요.' value={password} onChange={onChangePassword} />
       <div>
-        <form>
-          <input type="email" placeholder='이메일을 입력하세요.' value={email} onChange={onChangeEmail} />
-          <input type="password" placeholder='비밀번호를 입력하세요.' value={password} onChange={onChangePassword} />
-          <button type='submit' onClick={onLog}>
-            {btnNum === 0 ? '로그인' : '회원가입'}
-          </button>
-          <Link href="#">
-            <a onClick={btnTxt}>{btnNum === 1 ? '로그인' : '회원가입'}</a>
-          </Link>
-        </form>
+        <button type='submit' onClick={onLog}>
+          {btnNum === 0 ? '로그인' : '회원가입'}
+        </button>
+        <Link href="#">
+          <a onClick={btnTxt}>{btnNum === 1 ? '로그인' : '회원가입'}</a>
+        </Link>
       </div>
-    </React.Fragment>
+    </form>
   );
 };
 

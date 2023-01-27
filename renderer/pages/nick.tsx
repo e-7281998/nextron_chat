@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import Head from 'next/head';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { socket } from './socket';
+import styles from '../style/Nick.module.css';
 
 socket.emit('connection', '클라이언트가 접속함');
 
@@ -20,18 +20,10 @@ function Nick() {
     }
 
     return (
-        <React.Fragment>
-            <Head>
-                <title>Next - Nextron (with-typescript)</title>
-            </Head>
-            <div>
-                <p>사용하실 영문 닉네임을 입력하세요.</p>
-                <form>
-                    <input type="text" placeholder='Evan' value={nick} onChange={onchangeNick} />
-                    <button onClick={saveNick}>저장하기</button>
-                </form>
-            </div>
-        </React.Fragment>
+        <form className={`${styles.container}`}>
+            <input type="text" placeholder='닉네임을 입력하세요.' value={nick} onChange={onchangeNick} />
+            <button onClick={saveNick}>저장하기</button>
+        </form>
     );
 };
 

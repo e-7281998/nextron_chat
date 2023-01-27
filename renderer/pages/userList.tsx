@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { socket } from './socket';
-
+import styles from '../style/UserList.module.css';
 
 export function UserList() {
 
@@ -15,7 +15,7 @@ export function UserList() {
     }, [])
 
     return (
-        <ul>
+        <ul className={`${styles.userList}`}>
             {loginUser.map((nick, n) => {
                 return <li key={n}>{nick}</li>
             })}

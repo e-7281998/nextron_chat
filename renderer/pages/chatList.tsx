@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
+import { useEffect, useState } from 'react';
 import { socket } from './socket';
 import { useRouter } from 'next/router';
 import { UserList } from './userList';
+import styles from '../style/List.module.css';
 
 export var room = '';
 
@@ -65,33 +65,29 @@ function List() {
   }, [])
 
   return (
-    <React.Fragment>
-      <Head>
-        <title>Next - Nextron (with-typescript)</title>
-      </Head>
-      <div>
+    <div className={`${styles.wrap}`}>
+      <div className={`${styles.listBtnContainer}`}>
         <button onClick={showList} value="1">접속중인 유저</button>
         <button onClick={showList} value="2">채팅 방</button>
       </div>
-      <hr />
       {listValue == '1' ? <UserList />
-        : <>
-          <form>
+        : <div>
+          <form className={`${styles.makeRoom}`}>
             <p>채팅방 이름</p>
-            <input type="text" value={roomName} onChange={changeRoomNname} />
-            <button onClick={enterRoom} value="1" >1 : 1 채팅</button>
-            <button onClick={enterRoom} value="2" >그룹 채팅</button>
+            <input type="text" value={roomName} onChange={changeRoomNname} placeholder="채팅 방 이름을 정하세요." />
+            <div>
+              <button onClick={enterRoom} value="1" >1 : 1 채팅</button>
+              <button onClick={enterRoom} value="2" >그룹 채팅</button>
+            </div>
           </form>
-          <p>{errMsg}</p>
-          <hr />
-          <ul>
+          <p className='errMsg'>{errMsg}</p>
+          <ul className={`${styles.roomList}`}>
             {roomList.map((rm, n) => {
-              return <li key={n}><p>{rm}</p><button onClick={enterRoom} value="0">참여하기</button></li>
+              return <li key={n}><p>{rm}</p><button className='lightBlue' onClick={enterRoom} value="0">참여하기</button></li>
             })}
           </ul>
-        </>}
-
-    </React.Fragment >
+        </div>}
+    </div>
   );
 };
 
