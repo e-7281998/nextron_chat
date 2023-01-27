@@ -1,9 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { socket } from './socket';
 import { room } from './chatList';
 import { useRouter } from 'next/router';
 import styles from '../style/Room.module.css';
 
+window.addEventListener('resize', () => {
+    setChatHeight()
+})
+
+function setChatHeight() {
+    const winH = window.innerHeight;
+    const div = document.getElementsByTagName('div')[2];
+    const form = document.querySelector('form');
+    const divH = div.offsetHeight;
+    const formH = form.offsetHeight;
+    const chatH = winH - divH - formH - 40;
+    const ul = document.querySelector('ul');
+    ul.style.height = chatH + 'px';
+}
 
 //새로운 유저 입장, 떠남
 socket.on('welcome_leave', (arg) => {
@@ -58,9 +72,13 @@ function Room() {
         });
     }
 
+    useEffect(() => {
+        setChatHeight()
+    }, [])
+
     return (
         <div className={`${styles.wrap}`}>
-            <div>
+            <div className='roomTitle'>
                 <p>{room}</p>
                 <button className='lightBlue' onClick={leaveRoom}>채팅방 나가기</button>
             </div>

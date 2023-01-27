@@ -18,7 +18,6 @@
 .chat {
     padding: 10px;
     margin: 0;
-    height: 400px;
     overflow-y: auto;
     background-color: white;
     border-radius: 30px;
