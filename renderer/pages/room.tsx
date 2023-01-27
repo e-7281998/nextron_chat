@@ -4,10 +4,6 @@ import { room } from './chatList';
 import { useRouter } from 'next/router';
 import styles from '../style/Room.module.css';
 
-window.addEventListener('resize', () => {
-    setChatHeight();
-    setChatScroll();
-});
 
 //채팅 창 조절
 function setChatHeight() {
@@ -76,6 +72,10 @@ function Room() {
 
     useEffect(() => {
         setChatHeight();
+        window.addEventListener('resize', () => {
+            setChatHeight();
+            setChatScroll();
+        });
     }, []);
 
     return (

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { socket } from './socket';
 import { useRouter } from 'next/router';
-import { UserList } from './userList';
+import UserList from './userList';
 import styles from '../style/List.module.css';
 
 export var room = '';

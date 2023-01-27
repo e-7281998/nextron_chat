@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { socket } from './socket';
 import styles from '../style/UserList.module.css';
 
-export function UserList() {
+function UserList() {
 
     const [loginUser, setLoginUser] = useState(['']);
 
@@ -20,5 +20,7 @@ export function UserList() {
                 return <li key={n}><span>{nick}</span></li>
             })}
         </ul>
-    )
+    );
 };
+
+export default UserList;

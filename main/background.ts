@@ -131,33 +131,6 @@ if (isProd) {
     height: 600,
   });
 
-  //새로운 창 하나 더 만듬 완성 후 지울 것.
-  const subWin = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    },
-  })
-
-  const subWin2 = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
-    },
-  })
-
-  // const subWin3 = new BrowserWindow({
-  //   width: 800,
-  //   height: 600,
-  //   webPreferences: {
-  //     nodeIntegration: true,
-  //     contextIsolation: false
-  //   },
-  // })
 
   if (isProd) {
     await mainWindow.loadURL('app://./home.html');
@@ -165,10 +138,6 @@ if (isProd) {
     const port = process.argv[2];
     await mainWindow.loadURL(`http://localhost:${port}/home`);
     mainWindow.webContents.openDevTools();
-    //새로운 창 하나 더 만듬 완성 후 지울 것.
-    await subWin.loadURL(`http://localhost:${port}/home`);
-    await subWin2.loadURL(`http://localhost:${port}/home`);
-    // await subWin3.loadURL(`http://localhost:${port}/home`);
   }
 
 })();
