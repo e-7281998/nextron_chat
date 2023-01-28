@@ -7,7 +7,7 @@
 }
 
 .container::before {
-    content: 'Welcom Nextron Chat!';
+    content: 'Welcome Nextron Chat!';
     position: absolute;
     top: -60px;
     left: -15%;
