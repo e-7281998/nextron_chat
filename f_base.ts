@@ -5,13 +5,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.FIREBASE_PROJECTE_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGEING_SENDER_ID,
-    appId: process.env.FIREBASE_APP_ID,
-    measurementId: process.env.FIREBASE_MEASUREMENT_ID
+    apiKey: 'AIzaSyBP033UxGwRSqHG4x7k-S09s0UZTgq-Bi0',
+    authDomain: 'nextron-chat-bdbd4.firebaseapp.com',
+    projectId: 'nextron-chat-bdbd4',
+    storageBucket: 'nextron-chat-bdbd4.appspot.com',
+    messagingSenderId: '244649616053',
+    appId: '1:244649616053:web:f19faeb05cda2acc6b54fc',
+    measurementId: 'G-HGVP0L68V1'
 };
 
 export const app = initializeApp(firebaseConfig);
